@@ -27,7 +27,7 @@ static void itrunc(struct inode*);
 // only one device
 struct superblock sb; 
 
-void imeta(void){
+void sys_imeta(void){
 
 }
 // Read the super block.
