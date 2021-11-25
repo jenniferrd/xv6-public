@@ -27,9 +27,11 @@ ls(char *path)
 
   case T_DEV:
   case T_FILE:
+    printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
     break;
 
   case T_DIR:
+    printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
     if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
       printf(1, "ls: path too long\n");
       break;
@@ -51,7 +53,6 @@ ls(char *path)
           continue;
        }
        //buf will contain the path
-       printf(1, "%s %d %d %d\n", buf, st.type, st.ino, st.size);
        ls(buf);
     }
     break;
