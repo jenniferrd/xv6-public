@@ -183,6 +183,7 @@ UPROGS=\
 	_zombie\
 	_directoryWalker\
 	_inodeTBWalker\
+	_Walkers\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -255,6 +256,7 @@ EXTRA=\
 	printf.c umalloc.c\
 	directoryWalker.c\
 	inodeTBWalker.c\
+	Walkers.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 
