@@ -25,11 +25,8 @@
 static void itrunc(struct inode*);
 // there should be one superblock per disk device, but we run with
 // only one device
-struct superblock sb; 
+struct superblock sb;
 
-void sys_imeta(void){
-
-}
 // Read the super block.
 void
 readsb(int dev, struct superblock *sb)
@@ -672,4 +669,28 @@ nameiparent(char *path, char *name)
   return namex(path, 1, name);
 }
 
-
+//takes an inode number, reads the inode from disk (no cache), returns type and size of the inode
+int sys_imeta(void){
+  int inum;
+  int *size;
+  
+  struct buf *bp;
+  struct dinode *dip;
+   
+  if(argint(0,&inum) < 0){
+     return -1;
+  }
+  if(argptr(1, (void *)&size, sizeof(int)) < 0){
+     return -1;
+  }
+  
+  if(inum < ROOTINO || inum > sb.ninodes)
+     return -1;
+  
+  bp = bread(ROOTDEV, IBLOCK(inum, sb));
+  dip = (struct dinode*)bp->data + inum%IPB;
+  *size = (int)dip->size;
+  brelse(bp);
+  
+  return dip->type;
+}

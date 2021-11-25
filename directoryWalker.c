@@ -2,6 +2,7 @@
 #include "stat.h"
 #include "user.h"
 #include "fs.h"
+#include "heap.h"
 
 void
 ls(char *path)
@@ -26,7 +27,6 @@ ls(char *path)
 
   case T_DEV:
   case T_FILE:
-    printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
     break;
 
   case T_DIR:
@@ -38,26 +38,27 @@ ls(char *path)
     p = buf+strlen(buf);
     *p++ = '/';
     while(read(fd, &de, sizeof(de)) == sizeof(de)){
-      if(de.inum == 0)
-        continue;
-	  if(strcmp(de.name, ".") == 0 || strcmp(de.name, "..") == 0){
-		  continue;
-	  }
-      memmove(p, de.name, DIRSIZ);
-	  //end of the string
-      p[DIRSIZ] = 0;
-	  if(stat(buf, &st) <0){
-		printf(1, "ls: cannot stat %s\n", buf);
-		continue;
-	  }
-	  //buf will contain the path
-	  ls(buf);
+       if(de.inum == 0)
+          continue;
+       if(strcmp(de.name, ".") == 0 || strcmp(de.name, "..") == 0){
+          continue;
+       }
+       memmove(p, de.name, DIRSIZ);
+       //end of the string
+       p[DIRSIZ] = 0;
+       if(stat(buf, &st) <0){
+          printf(1, "ls: cannot stat %s\n", buf);
+          continue;
+       }
+       //buf will contain the path
+       printf(1, "%s %d %d %d\n", buf, st.type, st.ino, st.size);
+       ls(buf);
     }
     break;
 
   default:
-	printf(1,"??? %s\n", path);
-	break;
+     printf(1,"??? %s\n", path);
+     break;
   }
   close(fd);
 }
