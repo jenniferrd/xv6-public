@@ -690,7 +690,8 @@ int sys_imeta(void){
   bp = bread(ROOTDEV, IBLOCK(inum, sb));
   dip = (struct dinode*)bp->data + inum%IPB;
   *size = (int)dip->size;
+  int x = dip->type;
   brelse(bp);
   
-  return dip->type;
+  return x;
 }
