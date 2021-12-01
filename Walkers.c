@@ -35,19 +35,22 @@ int main(void){
    //dir_out and ino_out are file descriptors for the walkers' output
    
    
-   struct entry wdi[NINODES] = {0};
-   struct entry wdd[NINODES] = {0};
+   struct entry wdi;
+   struct entry wdd;
    
-   read(ino_out, (char *)wdi, sizeof(wdi));
-   read(dir_out, (char *)wdd, sizeof(wdd));
+
 
    int broken=0;
    //not sure what inode 0 is but it is weird
-   for(int i = 1; i < NINODES; i++)
-      if(wdi[i].type > 0 && wdd[i].type == 0){
-         walkerData[i] = wdi[i];
+   for(int i = 1; i < NINODES; i++){
+	   read(ino_out, &wdi, sizeof(wdi));
+	   read(dir_out, &wdd, sizeof(wdd));
+
+      if(wdi.type > 0 && wdd.type == 0){
+         walkerData[i] = wdi;
          broken++;
       }
+   }
    
    printf(1, "Number of broken files: %d\n", broken);    
    for(int i = 0; i < NINODES; i++) //walkerData will hold the broken inodes (the difference between the walkers)
@@ -56,9 +59,8 @@ int main(void){
   
    //printWalkerData(50);
 
-   //Commented because it does not work correctly with the waits
-   //wait();
-   //wait();
+   wait();
+   wait();
 
 
    exit();

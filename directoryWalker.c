@@ -30,21 +30,21 @@ ls(char *path)
 		case T_DEV:
 		case T_FILE:
 			if(human_readable_mode){
-			printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
+				printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
 			}
 			else{
-			walkerData[st.ino].type = st.type;
-			walkerData[st.ino].size = st.size;
+				walkerData[st.ino].type = st.type;
+				walkerData[st.ino].size = st.size;
 			}
 			break;
 
 		case T_DIR:
 			if(human_readable_mode){
-			printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
+				printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
 			}
 			else {
-			walkerData[st.ino].type = st.type;
-			walkerData[st.ino].size = st.size;
+				walkerData[st.ino].type = st.type;
+				walkerData[st.ino].size = st.size;
 			}
 
 			if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
@@ -92,8 +92,11 @@ main(int argc, char *argv[])
 	}
 	if(argc < 2){
 		ls(".");
-		if(!human_readable_mode){
-			write(1, walkerData, sizeof(walkerData));
+		if(!human_readable_mode)
+		{
+			for(int i=0;i<200;i++){
+				write(1,&walkerData[i], sizeof(walkerData[i]));
+			}
 		}
 		exit();
 	}
@@ -103,7 +106,10 @@ main(int argc, char *argv[])
 	}
 
 	if(!human_readable_mode){
-		write(1, walkerData, sizeof(walkerData));
+		for(int i=0;i<200;i++){
+			write(1,&walkerData[i], sizeof(walkerData[i]));
+		}
+
 	}
 
 	exit();
