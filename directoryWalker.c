@@ -2,7 +2,8 @@
 #include "stat.h"
 #include "user.h"
 #include "fs.h"
-#include "heap.h"
+#include "fcntl.h"
+#include "walkerData.h"
 
 void
 ls(char *path)
@@ -28,10 +29,14 @@ ls(char *path)
   case T_DEV:
   case T_FILE:
     printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
+    walkerData[st.ino].type = st.type;
+    walkerData[st.ino].size = st.size;
     break;
 
   case T_DIR:
     printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
+    walkerData[st.ino].type = st.type;
+    walkerData[st.ino].size = st.size;
     if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
       printf(1, "ls: path too long\n");
       break;
@@ -67,13 +72,32 @@ ls(char *path)
 int
 main(int argc, char *argv[])
 {
-  int i;
-
-  if(argc < 2){
-    ls(".");
+  int i, fdData;
+  
+  if((fdData = open("dir_data", O_CREATE | O_RDWR)) < 0){
+    printf(2, "directoryWalker: cannot open data file\n");
     exit();
   }
+  write(fdData, walkerData, sizeof(walkerData));
+  close(fdData);
+  
+  if((fdData = open("dir_data", O_CREATE | O_RDWR)) < 0){
+    printf(2, "directoryWalker: cannot open data file\n");
+    exit();
+  }
+
+  if(argc < 2){
+     ls(".");
+     write(fdData, walkerData, sizeof(walkerData));
+     close(fdData);
+     exit();
+  }
+  
   for(i=1; i<argc; i++)
     ls(argv[i]);
+    
+  write(fdData, walkerData, sizeof(walkerData));
+  close(fdData);
+  
   exit();
 }

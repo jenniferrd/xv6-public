@@ -24,6 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int imeta(int, int*);
+int zerout(int);
 
 // ulib.c
 int stat(const char*, struct stat*);

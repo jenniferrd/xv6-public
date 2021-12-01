@@ -184,6 +184,7 @@ UPROGS=\
 	_directoryWalker\
 	_inodeTBWalker\
 	_Walkers\
+	_corruptor\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -257,6 +258,7 @@ EXTRA=\
 	directoryWalker.c\
 	inodeTBWalker.c\
 	Walkers.c\
+	corruptor.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 

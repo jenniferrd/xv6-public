@@ -680,18 +680,43 @@ int sys_imeta(void){
   if(argint(0,&inum) < 0){
      return -1;
   }
+  
   if(argptr(1, (void *)&size, sizeof(int)) < 0){
      return -1;
   }
   
-  if(inum < ROOTINO || inum > sb.ninodes)
+  if(inum < ROOTINO || inum > sb.ninodes){
      return -1;
-  
+  }
   bp = bread(ROOTDEV, IBLOCK(inum, sb));
   dip = (struct dinode*)bp->data + inum%IPB;
   *size = (int)dip->size;
   int x = dip->type;
   brelse(bp);
-  
   return x;
+}
+
+int sys_zerout(void){
+  int inum;
+   
+  struct inode *ip;
+   
+  if(argint(0,&inum) < 0)
+     return -1;
+  
+  if(inum < ROOTINO || inum > sb.ninodes)
+     return -1;
+     
+  begin_op();
+  
+  //corrupt the in memory inode
+  ip = iget(ROOTDEV, inum);
+  ilock(ip);
+  ip->size = 0;
+  for(int i = 0; i < NDIRECT+1; i++)
+     ip->addrs[i] = 0;
+  iupdate(ip);	//flush to disk
+  iunlockput(ip);
+  end_op();
+  return 0;
 }
