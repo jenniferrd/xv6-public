@@ -105,6 +105,7 @@ extern int sys_write(void);
 extern int sys_uptime(void);
 extern int sys_imeta(void);
 extern int sys_zerout(void);
+extern int sys_recover(void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -130,6 +131,7 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_imeta]   sys_imeta,
 [SYS_zerout]  sys_zerout,
+[SYS_recover] sys_recover,
 };
 
 void

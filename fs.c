@@ -720,3 +720,39 @@ int sys_zerout(void){
   end_op();
   return 0;
 }
+
+int sys_recover (void){
+	char* path;
+	int ino;
+	if(argint(0,&ino) <0 || argstr(1,&path) <0){
+		//arguments invalid
+		return -1;
+	}
+	
+	begin_op();
+	struct inode* ip = iget(ROOTDEV, ino);
+	if(ip == 0 ){
+		end_op();
+		return -1;
+	}
+	
+	char name[DIRSIZ];
+	struct inode* dp = nameiparent(path,name);
+	if(dp ==0){
+		return -1;
+	}
+	ilock(dp);
+	if(dp->dev != ip->dev || dirlink(dp, name, ino) < 0){
+		iunlockput(dp);
+		end_op();
+		return -1;
+	}
+
+	iunlockput(dp);
+	end_op();
+
+
+	return 0;
+
+
+}

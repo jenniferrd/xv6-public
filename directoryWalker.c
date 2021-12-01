@@ -94,7 +94,7 @@ main(int argc, char *argv[])
 		ls(".");
 		if(!human_readable_mode)
 		{
-			for(int i=0;i<200;i++){
+			for(int i=1;i<200;i++){
 				write(1,&walkerData[i], sizeof(walkerData[i]));
 			}
 		}
@@ -106,7 +106,7 @@ main(int argc, char *argv[])
 	}
 
 	if(!human_readable_mode){
-		for(int i=0;i<200;i++){
+		for(int i=1;i<200;i++){
 			write(1,&walkerData[i], sizeof(walkerData[i]));
 		}
 

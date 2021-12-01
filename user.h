@@ -25,6 +25,7 @@ int sleep(int);
 int uptime(void);
 int imeta(int, int*);
 int zerout(int);
+int recover(int,const char*);
 
 // ulib.c
 int stat(const char*, struct stat*);
